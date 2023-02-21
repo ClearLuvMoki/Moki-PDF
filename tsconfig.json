@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "incremental": true,
+    "target": "es2021",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "es2021",
+      "ESNext"
+    ],
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react-jsx",
+    "pretty": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "inlineSources": true,
+    "allowJs": true,
+    "outDir": "release",
+    "paths": {
+      "@/resources/*": [
+        "./resources/*"
+      ],
+      "@/src/*": [
+        "./src/*"
+      ],
+    }
+  },
+  "exclude": [],
+  "include": ["src"]
+}
