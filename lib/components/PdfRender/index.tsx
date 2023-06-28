@@ -1,7 +1,10 @@
-import React, {useEffect} from 'react';
+import "pdfjs-dist/web/pdf_viewer.css";
+import React, {useEffect, useState} from 'react';
 import {StyledPdfRender} from "./styled/StyledPdfRender";
 import type {PDFDocumentProxy} from "pdfjs-dist";
 import {EventBus, NullL10n, PDFLinkService, PDFViewer} from "pdfjs-dist/web/pdf_viewer";
+import ReactDOM, {createRoot} from "react-dom/client";
+import {findOrCreateContainerLayer} from "../../utils/tools";
 
 
 type PdfRenderProps = {
@@ -11,7 +14,7 @@ const PdfRender = (
     props: PdfRenderProps
 ) => {
     const {pdfDocument} = props;
-    let $renderRef = React.createRef<HTMLDivElement>()
+    const $renderRef = React.useRef<HTMLDivElement>()
     let viewer = null;
 
 
@@ -19,11 +22,10 @@ const PdfRender = (
         if (pdfDocument) {
             handleInitPdf();
         }
-    }, [pdfDocument, $renderRef])
+    }, [pdfDocument])
 
 
     const handleInitPdf = () => {
-        console.log(pdfDocument, 'dddd')
         const eventBus = new EventBus();
         const linkService = new PDFLinkService({
             eventBus,
@@ -40,20 +42,58 @@ const PdfRender = (
         linkService.setDocument(pdfDocument);
         linkService.setViewer(viewer);
         viewer.setDocument(pdfDocument);
+
+        const {ownerDocument: doc} = $renderRef?.current;
+        eventBus.on("textlayerrendered", () => {
+            handleRenderHighlights()
+        });
+
+        eventBus.on("pagesinit", () => {
+
+        });
+    }
+
+    const handleGroupHighlightByPage = (highlights: any[]) => {
+
     }
 
 
-    const handleAttachRef = (ref) => {
-        $renderRef = ref;
-        if (ref) {
-            const {ownerDocument: doc} = ref;
+    const handleRenderHighlights = () => {
+        for (let pageNumber = 1; pageNumber <= pdfDocument?.numPages; pageNumber++) {
+            const highlightLayer = handleHighlightLayer(pageNumber);
+            if (highlightLayer) {
+                ReactDOM.createRoot(highlightLayer)
+                    .render(
+                        <div>
+                            {
+
+                            }
+                        </div>
+                    )
+            }
         }
     }
 
-    return (
-        <StyledPdfRender ref={(ref: any) => handleAttachRef(ref)}>
 
+    const handleHighlightLayer = (page: number) => {
+        const {textLayer} = viewer.getPageView(page - 1) || {};
+
+        if (!textLayer) {
+            return null;
+        }
+
+        return findOrCreateContainerLayer(
+            textLayer.textLayerDiv,
+            "PdfHighlighter__highlight-layer"
+        );
+    }
+
+
+    return (
+        <StyledPdfRender ref={$renderRef}>
+            <div className="pdfViewer"/>
         </StyledPdfRender>
+
     );
 };
 

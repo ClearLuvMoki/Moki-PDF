@@ -1,7 +1,4 @@
 import styled from "styled-components";
 
-export const StyledPdfLoader = styled.div`
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
+export const StyledPdfLoader = styled.span`
 `

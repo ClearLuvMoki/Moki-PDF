@@ -74,8 +74,10 @@ const PdfLoader = (
 
     return (
         <ErrorBoundary>
-            <StyledPdfLoader ref={documentRef}/>
-            {children(state?.pdfDocument)}
+            <div style={{width: "100%", height: "100%", position: "relative"}}>
+                <StyledPdfLoader ref={documentRef}/>
+                {children(state?.pdfDocument)}
+            </div>
         </ErrorBoundary>
     );
 };
